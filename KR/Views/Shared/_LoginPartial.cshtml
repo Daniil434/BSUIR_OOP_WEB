@@ -1,0 +1,39 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<ul class="navbar-nav ms-auto">
+@if (SignInManager.IsSignedIn(User))
+{
+	var user = await UserManager.GetUserAsync(User);
+        <li class="nav-item d-flex  align-items-center">
+        @if (user?.AvatarData != null)
+        {
+            <img src="data:@user.AvatarContentType;base64,@Convert.ToBase64String(user.AvatarData)"
+                class="rounded-circle me-2"
+                style="width: 40px; height: 40px; object-fit: cover"
+                alt="Profile Picture" />
+        }
+        <span>@User.Identity.Name</span>
+    </li>
+    <li class="nav-item">
+            <form class="form-inline" action="/Profile/Edit" method="get">
+                <button type="submit" class="nav-link btn btn-link text-dark">Изменить профиль</button>
+        </form>
+    </li>
+        <li class="nav-item">
+            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Todo", new { area = "" })">
+                <button type="submit" class="nav-link btn btn-link text-dark">Выйти</button>
+            </form>
+        </li>
+}
+else
+{
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
+    </li>
+}
+</ul>
